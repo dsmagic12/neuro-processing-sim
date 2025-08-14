@@ -1,0 +1,66 @@
+[
+  {
+    "step": 1,
+    "brain_region": "Retina",
+    "input": "A red apple sitting on a wooden table in bright daylight",
+    "output": "[OpenAI gpt-4o-mini] Simulated neural response based on prompt: You are simulating retinal photoreceptors. Convert...",
+    "processing_time": 6.67572021484375e-06,
+    "model": "openai/gpt-4o-mini"
+  },
+  {
+    "step": 2,
+    "brain_region": "Retinal Ganglion Cells",
+    "input": "[OpenAI gpt-4o-mini] Simulated neural response based on prompt: You are simulating retinal photoreceptors. Convert...",
+    "output": "[OpenAI gpt-4o-mini] Simulated neural response based on prompt: You are retinal ganglion cells. Separate the input...",
+    "processing_time": 2.86102294921875e-06,
+    "model": "openai/gpt-4o-mini"
+  },
+  {
+    "step": 3,
+    "brain_region": "Lateral Geniculate Nucleus (LGN)",
+    "input": "[OpenAI gpt-4o-mini] Simulated neural response based on prompt: You are retinal ganglion cells. Separate the input...",
+    "output": "[OpenAI gpt-4o-mini] Simulated neural response based on prompt: You are the LGN. Process the retinal input and enh...",
+    "processing_time": 1.9073486328125e-06,
+    "model": "openai/gpt-4o-mini"
+  },
+  {
+    "step": 4,
+    "brain_region": "Primary Visual Cortex (V1)",
+    "input": "[OpenAI gpt-4o-mini] Simulated neural response based on prompt: You are the LGN. Process the retinal input and enh...",
+    "output": "[OpenAI gpt-4o-mini] Simulated neural response based on prompt: You are V1. Extract basic visual features: edges, ...",
+    "processing_time": 1.6689300537109375e-06,
+    "model": "openai/gpt-4o-mini"
+  },
+  {
+    "step": 5,
+    "brain_region": "V2/V4",
+    "input": "[OpenAI gpt-4o-mini] Simulated neural response based on prompt: You are V1. Extract basic visual features: edges, ...",
+    "output": "[OpenAI gpt-4o-mini] Simulated neural response based on prompt: You are V2/V4 ventral stream. Analyze complex shap...",
+    "processing_time": 1.9073486328125e-06,
+    "model": "openai/gpt-4o-mini"
+  },
+  {
+    "step": 6,
+    "brain_region": "MT/MST",
+    "input": "[OpenAI gpt-4o-mini] Simulated neural response based on prompt: You are V2/V4 ventral stream. Analyze complex shap...",
+    "output": "[OpenAI gpt-4o-mini] Simulated neural response based on prompt: You are MT/MST dorsal stream. Analyze motion patte...",
+    "processing_time": 1.430511474609375e-06,
+    "model": "openai/gpt-4o-mini"
+  },
+  {
+    "step": 7,
+    "brain_region": "Inferotemporal Cortex (IT)",
+    "input": "[OpenAI gpt-4o-mini] Simulated neural response based on prompt: You are MT/MST dorsal stream. Analyze motion patte...",
+    "output": "[OpenAI gpt-4o-mini] Simulated neural response based on prompt: You are IT cortex. Recognize and categorize object...",
+    "processing_time": 1.1920928955078125e-06,
+    "model": "openai/gpt-4o-mini"
+  },
+  {
+    "step": 8,
+    "brain_region": "Perirhinal Cortex",
+    "input": "[OpenAI gpt-4o-mini] Simulated neural response based on prompt: You are IT cortex. Recognize and categorize object...",
+    "output": "[OpenAI gpt-4o-mini] Simulated neural response based on prompt: You are perirhinal cortex. Compare the recognized ...",
+    "processing_time": 1.1920928955078125e-06,
+    "model": "openai/gpt-4o-mini"
+  }
+]

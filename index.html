@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Neural Visual Processing Simulator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Configuration Panel -->
+        <aside class="sidebar">
+            <div class="sidebar-content">
+                <h3>Configuration</h3>
+                
+                <div class="form-group">
+                    <label class="form-label" for="model-select">Claude Model</label>
+                    <select id="model-select" class="form-control">
+                        <option value="claude-3-5-sonnet-20241022">Claude 3.5 Sonnet (Balanced)</option>
+                        <option value="claude-3-5-haiku-20241022">Claude 3.5 Haiku (Fast & Cost-Effective)</option>
+                        <option value="claude-3-opus-20240229">Claude 3 Opus (Premium Quality)</option>
+                        <option value="auto-optimal">Auto-Select Optimal Models</option>
+                    </select>
+                </div>
+
+                <div class="model-info" id="model-info">
+                    <p class="info-text">
+                        <strong>Auto-Select:</strong> Uses different Claude models optimized for each processing step:
+                        <br>• Steps 1-3: Haiku (Basic processing)
+                        <br>• Steps 4-6: Sonnet (Intermediate)
+                        <br>• Steps 7-8: Sonnet (High-level cognition)
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="api-key">Anthropic Claude API Key</label>
+                    <input type="password" id="api-key" class="form-control" placeholder="Enter your Claude API key">
+                    <small class="form-help">Get your API key from <a href="https://console.anthropic.com/" target="_blank">console.anthropic.com</a></small>
+                </div>
+
+                <button id="test-connection" class="btn btn--secondary btn--full-width">
+                    Test Claude Connection
+                </button>
+
+                <div class="connection-status" id="connection-status"></div>
+
+                <h4 class="settings-header">Simulation Settings</h4>
+                
+                <div class="form-group">
+                    <label class="form-label" for="processing-speed">Processing Speed (ms)</label>
+                    <input type="range" id="processing-speed" min="500" max="3000" value="1500" class="range-input">
+                    <span id="speed-value">1500ms</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="detailed-logging" checked>
+                        Enable Detailed Logging
+                    </label>
+                </div>
+
+                <h4 class="settings-header">Visual Memory System</h4>
+                
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="memory-enabled" checked>
+                        Enable Visual Memory
+                    </label>
+                    <small class="form-help">Store processed images to influence future recognition</small>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="memory-influence">Memory Influence</label>
+                    <input type="range" id="memory-influence" min="0" max="1" step="0.1" value="0.7" class="range-input">
+                    <span id="memory-influence-value">70%</span>
+                    <small class="form-help">How much stored memories affect new recognition</small>
+                </div>
+
+                <div class="memory-status">
+                    <div class="memory-counter">
+                        <span>Stored Memories: </span>
+                        <span id="memory-count" class="count">0</span>
+                    </div>
+                    <button id="clear-memory" class="btn btn--small btn--secondary">Clear Memory</button>
+                </div>
+
+                <div class="memory-list-container">
+                    <h5>Recent Memories</h5>
+                    <div id="memory-list" class="memory-list"></div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header Section -->
+            <header class="header">
+                <h1>Claude Neural Visual Processing Simulator</h1>
+                <p class="subtitle">Powered by Anthropic's Claude AI Models</p>
+                <p class="description">
+                    This application uses Claude's advanced language models to simulate how the human 
+                    visual system processes information, from photon absorption in the retina to 
+                    conscious perception. Each brain region is modeled using specialized Claude prompts 
+                    based on neuroscience research.
+                </p>
+            </header>
+
+            <!-- Input Section -->
+            <section class="input-section card">
+                <div class="card__body">
+                    <h3>Visual Stimulus Input</h3>
+                    
+                    <!-- Input Type Selection -->
+                    <div class="form-group">
+                        <label class="form-label">Input Method</label>
+                        <div class="input-method-selector">
+                            <label class="radio-label">
+                                <input type="radio" name="input-method" value="text" checked>
+                                Text Description
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="input-method" value="camera">
+                                Live Camera Feed
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Text Input Mode -->
+                    <div id="text-input-section" class="input-mode-section">
+                        <div class="form-group">
+                            <label class="form-label" for="visual-input">Describe the visual scene</label>
+                            <textarea 
+                                id="visual-input" 
+                                class="form-control" 
+                                rows="3" 
+                                placeholder="Example: A red apple sitting on a wooden table with sunlight coming through a window"
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Camera Input Mode -->
+                    <div id="camera-input-section" class="input-mode-section" style="display: none;">
+                        <div class="camera-container">
+                            <video id="camera-feed" class="camera-preview" autoplay muted playsinline style="display: none;"></video>
+                            <canvas id="camera-canvas" class="camera-preview" style="display: none;"></canvas>
+                            <div id="camera-placeholder" class="camera-placeholder">
+                                <div class="placeholder-content">
+                                    <div class="camera-icon">📷</div>
+                                    <p>Camera access required for live visual processing</p>
+                                    <button id="enable-camera" class="btn btn--secondary">Enable Camera</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="camera-controls" id="camera-controls" style="display: none;">
+                            <button id="capture-frame" class="btn btn--secondary">
+                                📸 Capture Frame
+                            </button>
+                            <button id="toggle-camera" class="btn btn--outline">
+                                🔄 Switch Camera
+                            </button>
+                            <div class="capture-status" id="capture-status"></div>
+                        </div>
+
+                        <div class="captured-frame-container" id="captured-frame-container" style="display: none;">
+                            <h4>Captured Frame for Processing</h4>
+                            <img id="captured-frame" class="captured-image" alt="Captured frame">
+                            <div class="frame-info">
+                                <span id="frame-timestamp"></span>
+                                <button id="recapture-frame" class="btn btn--outline btn--small">Recapture</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button id="start-simulation" class="btn btn--primary" disabled>
+                        Start Claude Neural Simulation
+                    </button>
+                </div>
+            </section>
+
+            <!-- Progress Section -->
+            <section class="progress-section" id="progress-section" style="display: none;">
+                <div class="progress-header">
+                    <h3>Processing Pipeline</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <span class="progress-text" id="progress-text">0% Complete</span>
+                </div>
+            </section>
+
+            <!-- Processing Steps -->
+            <section class="processing-steps" id="processing-steps">
+                <div class="steps-grid">
+                    <!-- Step 1: Photon Absorption -->
+                    <div class="step-card" id="step-1" data-step="1">
+                        <div class="step-header">
+                            <div class="step-number">1</div>
+                            <div class="step-info">
+                                <h4>Photon Absorption</h4>
+                                <p class="brain-region">Retina</p>
+                            </div>
+                            <div class="step-status" id="status-1">waiting</div>
+                        </div>
+                        <div class="step-content">
+                            <p class="step-description">Rods and cones transduce light into neural signals</p>
+                            <div class="step-output" id="output-1"></div>
+                        </div>
+                        <div class="tooltip" id="tooltip-1">
+                            The retina contains photoreceptors (rods and cones) that convert light into electrical signals. This is where visual processing begins.
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Signal Aggregation -->
+                    <div class="step-card" id="step-2" data-step="2">
+                        <div class="step-header">
+                            <div class="step-number">2</div>
+                            <div class="step-info">
+                                <h4>Signal Aggregation</h4>
+                                <p class="brain-region">Retinal Ganglion Cells</p>
+                            </div>
+                            <div class="step-status" id="status-2">waiting</div>
+                        </div>
+                        <div class="step-content">
+                            <p class="step-description">Parasol (M-type) and midget (P-type) cells process different aspects</p>
+                            <div class="step-output" id="output-2"></div>
+                        </div>
+                        <div class="tooltip" id="tooltip-2">
+                            Retinal ganglion cells organize visual information into parallel processing streams for different visual features.
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Thalamic Processing -->
+                    <div class="step-card" id="step-3" data-step="3">
+                        <div class="step-header">
+                            <div class="step-number">3</div>
+                            <div class="step-info">
+                                <h4>Thalamic Processing</h4>
+                                <p class="brain-region">Lateral Geniculate Nucleus (LGN)</p>
+                            </div>
+                            <div class="step-status" id="status-3">waiting</div>
+                        </div>
+                        <div class="step-content">
+                            <p class="step-description">Magnocellular and parvocellular pathways process motion and color/form</p>
+                            <div class="step-output" id="output-3"></div>
+                        </div>
+                        <div class="tooltip" id="tooltip-3">
+                            The lateral geniculate nucleus acts as a relay station, organizing visual information into parallel processing streams.
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Primary Feature Extraction -->
+                    <div class="step-card" id="step-4" data-step="4">
+                        <div class="step-header">
+                            <div class="step-number">4</div>
+                            <div class="step-info">
+                                <h4>Primary Feature Extraction</h4>
+                                <p class="brain-region">Primary Visual Cortex (V1)</p>
+                            </div>
+                            <div class="step-status" id="status-4">waiting</div>
+                        </div>
+                        <div class="step-content">
+                            <p class="step-description">Simple/complex cells detect edges, orientations, spatial frequencies</p>
+                            <div class="step-output" id="output-4"></div>
+                        </div>
+                        <div class="tooltip" id="tooltip-4">
+                            Primary visual cortex is organized into hypercolumns that detect basic features like edges and orientations.
+                        </div>
+                    </div>
+
+                    <!-- Step 5: Ventral Stream Processing -->
+                    <div class="step-card" id="step-5" data-step="5">
+                        <div class="step-header">
+                            <div class="step-number">5</div>
+                            <div class="step-info">
+                                <h4>Ventral Stream Processing</h4>
+                                <p class="brain-region">V2/V4</p>
+                            </div>
+                            <div class="step-status" id="status-5">waiting</div>
+                        </div>
+                        <div class="step-content">
+                            <p class="step-description">V2 processes texture, depth; V4 handles color constancy and forms</p>
+                            <div class="step-output" id="output-5"></div>
+                        </div>
+                        <div class="tooltip" id="tooltip-5">
+                            The 'what' pathway identifies objects and their properties through hierarchical feature detection.
+                        </div>
+                    </div>
+
+                    <!-- Step 6: Dorsal Stream Analysis -->
+                    <div class="step-card" id="step-6" data-step="6">
+                        <div class="step-header">
+                            <div class="step-number">6</div>
+                            <div class="step-info">
+                                <h4>Dorsal Stream Analysis</h4>
+                                <p class="brain-region">MT/MST</p>
+                            </div>
+                            <div class="step-status" id="status-6">waiting</div>
+                        </div>
+                        <div class="step-content">
+                            <p class="step-description">MT detects motion; MST analyzes optic flow and spatial relationships</p>
+                            <div class="step-output" id="output-6"></div>
+                        </div>
+                        <div class="tooltip" id="tooltip-6">
+                            The 'where/how' pathway processes spatial relationships and motion for action guidance.
+                        </div>
+                    </div>
+
+                    <!-- Step 7: Object Recognition -->
+                    <div class="step-card" id="step-7" data-step="7">
+                        <div class="step-header">
+                            <div class="step-number">7</div>
+                            <div class="step-info">
+                                <h4>Object Recognition</h4>
+                                <p class="brain-region">Inferotemporal Cortex (IT)</p>
+                            </div>
+                            <div class="step-status" id="status-7">waiting</div>
+                        </div>
+                        <div class="step-content">
+                            <p class="step-description">View-invariant object representations, categorical processing</p>
+                            <div class="step-output" id="output-7"></div>
+                        </div>
+                        <div class="tooltip" id="tooltip-7">
+                            IT cortex creates view-invariant object representations and categorizes visual objects.
+                        </div>
+                    </div>
+
+                    <!-- Step 8: Memory Integration -->
+                    <div class="step-card" id="step-8" data-step="8">
+                        <div class="step-header">
+                            <div class="step-number">8</div>
+                            <div class="step-info">
+                                <h4>Memory Integration</h4>
+                                <p class="brain-region">Perirhinal Cortex</p>
+                            </div>
+                            <div class="step-status" id="status-8">waiting</div>
+                        </div>
+                        <div class="step-content">
+                            <p class="step-description">Compare with stored memories, semantic associations</p>
+                            <div class="step-output" id="output-8"></div>
+                        </div>
+                        <div class="tooltip" id="tooltip-8">
+                            Higher-order areas integrate information across streams and compare with memory for conscious perception.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section" id="results-section" style="display: none;">
+                <div class="card">
+                    <div class="card__body">
+                        <h3>Final Conscious Perception (Claude Integration)</h3>
+                        <div id="final-perception"></div>
+                        <div class="results-actions">
+                            <button id="download-results" class="btn btn--secondary">Download Claude Results</button>
+                            <button id="reset-simulation" class="btn btn--outline">Reset Simulation</button>
+                            <button id="generate-report" class="btn btn--secondary">Generate Analysis Report</button>
+                            <button id="continuous-processing" class="btn btn--primary" style="display: none;">Start Continuous Processing</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
